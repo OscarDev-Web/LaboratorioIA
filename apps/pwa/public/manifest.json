@@ -1,12 +1,12 @@
 {
-  "name": "NextCollege Mobile PWA",
-  "short_name": "NextCollege",
-  "description": "Aplicación móvil PWA de NextCollege sincronizada en tiempo real con Dokploy CI/CD",
+  "name": "Hamburger Rapid Mobile PWA",
+  "short_name": "Hamburger Rapid",
+  "description": "App oficial de comida rápida gourmet Hamburger Rapid con pedidos instantáneos y rastreo en tiempo real",
   "start_url": "/app/",
   "scope": "/app/",
   "display": "standalone",
-  "background_color": "#090d16",
-  "theme_color": "#2563eb",
+  "background_color": "#FAF7F2",
+  "theme_color": "#B45309",
   "orientation": "portrait",
   "icons": [
     {

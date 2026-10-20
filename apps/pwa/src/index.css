@@ -1,12 +1,28 @@
 :root {
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --bg: #090d16;
-  --surface: #131b2e;
-  --surface-border: #1e293b;
-  --text: #f8fafc;
-  --text-muted: #94a3b8;
-  --success: #10b981;
+  --primary: #B45309;
+  --primary-hover: #92400E;
+  --primary-light: #FEF3C7;
+  --primary-subtle: #FFFBEB;
+  --accent: #EA580C;
+  --bg-app: #FAF7F2;
+  --surface: #FFFFFF;
+  --surface-alt: #F4EFEB;
+  --border: #E8DFD5;
+  --border-light: #F1E9DF;
+  --text: #1F2937;
+  --text-muted: #64748B;
+  --text-light: #94A3B8;
+  --success: #10B981;
+  --success-light: #D1FAE5;
+  --danger: #EF4444;
+  --danger-light: #FEE2E2;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -18,31 +34,47 @@
 
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: #030712;
+  background-color: #EFE9E0;
   color: var(--text);
   min-height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
 }
 
 #root {
   width: 100%;
   max-width: 480px;
   min-height: 100vh;
-  background-color: var(--bg);
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  background-color: var(--bg-app);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
   position: relative;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding-bottom: 76px; /* space for bottom nav bar */
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in {
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.25s ease-out;
+}
+
+/* Custom modern scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" style="background-color: #FAF7F2;">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
@@ -17,16 +17,47 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
-  <div id="root"></div>
+<body style="margin: 0; padding: 0; background-color: #FAF7F2;">
+  <div id="root">
+    <div style="display: flex; min-height: 100vh; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF7F2; color: #B45309;">
+      <div style="text-align: center; padding: 20px;">
+        <div style="font-size: 3.5rem; animation: bounce 1s infinite alternate;">🍔</div>
+        <div style="font-weight: 800; font-size: 1.1rem; margin-top: 12px; color: #1F2937;">Hamburger Rapid</div>
+        <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px;">Iniciando app móvil...</div>
+      </div>
+    </div>
+  </div>
   <script type="module" src="/src/main.jsx"></script>
   
   <script>
+    // Limpieza proactiva de cachés obsoletas de la versión anterior
+    if ('caches' in window) {
+      caches.keys().then((keys) => {
+        keys.forEach((key) => {
+          if (key.includes('nextcollege')) {
+            console.log('🧹 [PWA] Eliminando caché previa:', key);
+            caches.delete(key);
+          }
+        });
+      });
+    }
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/app/sw.js')
-          .then((reg) => console.log('✅ [PWA] Service Worker registrado con éxito:', reg.scope))
+          .then((reg) => {
+            console.log('✅ [PWA] Service Worker registrado con éxito:', reg.scope);
+            reg.update();
+          })
           .catch((err) => console.error('❌ [PWA] Error registrando Service Worker:', err));
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
       });
     }
   </script>

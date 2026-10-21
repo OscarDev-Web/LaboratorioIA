@@ -32,7 +32,11 @@ function hasBuild(dir) {
 // 1. Mobile PWA under /app
 if (hasBuild(pwaPath)) {
   app.use('/app', express.static(pwaPath));
-  app.get('/app/*', (req, res) => {
+  app.get(['/app', '/app/*'], (req, res) => {
+    // Si la petición es por un archivo estático no encontrado (.js, .css, etc.), retornar 404
+    if (path.extname(req.path)) {
+      return res.status(404).send('Asset not found');
+    }
     res.sendFile(path.join(pwaPath, 'index.html'));
   });
 } else {
@@ -50,7 +54,10 @@ if (hasBuild(pwaPath)) {
 // 2. Control Panel under /admin
 if (hasBuild(adminPath)) {
   app.use('/admin', express.static(adminPath));
-  app.get('/admin/*', (req, res) => {
+  app.get(['/admin', '/admin/*'], (req, res) => {
+    if (path.extname(req.path)) {
+      return res.status(404).send('Asset not found');
+    }
     res.sendFile(path.join(adminPath, 'index.html'));
   });
 } else {

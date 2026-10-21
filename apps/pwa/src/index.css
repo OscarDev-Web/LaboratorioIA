@@ -32,11 +32,16 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-body {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: #EFE9E0;
+html, body {
+  background-color: #FAF7F2;
   color: var(--text);
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   display: flex;
   justify-content: center;
   align-items: flex-start;

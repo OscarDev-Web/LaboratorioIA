@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const { optionalAuth } = require('../middleware/auth');
 
 // Health Check Endpoint (For Dokploy Health Checks & Admin Monitoring)
 router.get('/health', (req, res) => {
@@ -32,25 +33,29 @@ router.get('/products', async (req, res) => {
 });
 
 // Add new burger
-router.post('/products', async (req, res) => {
+router.post('/products', optionalAuth, async (req, res) => {
   try {
+    const operator = req.user?.userName || 'Anónimo';
     const { name, category, specialty, specialtyBadge, price, stock, image, description, cookTime, calories } = req.body;
     if (!name || price === undefined) {
       return res.status(400).json({ success: false, error: 'Nombre y precio son requeridos para registrar la hamburguesa.' });
     }
     const product = await db.addProduct({ name, category, specialty, specialtyBadge, price, stock, image, description, cookTime, calories });
-    res.status(201).json({ success: true, message: 'Hamburguesa agregada exitosamente', data: product });
+    console.log(`[Audit ERP] Operador ${operator} registró producto: "${name}" (ID ${product.id})`);
+    res.status(201).json({ success: true, message: 'Hamburguesa agregada exitosamente', data: product, operator });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
 // Delete burger
-router.delete('/products/:id', async (req, res) => {
+router.delete('/products/:id', optionalAuth, async (req, res) => {
   try {
+    const operator = req.user?.userName || 'Anónimo';
     const { id } = req.params;
     await db.deleteProduct(id);
-    res.json({ success: true, message: `Hamburguesa con ID ${id} eliminada.` });
+    console.log(`[Audit ERP] Operador ${operator} eliminó producto ID ${id}`);
+    res.json({ success: true, message: `Hamburguesa con ID ${id} eliminada.`, operator });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

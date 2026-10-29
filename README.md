@@ -189,6 +189,12 @@ flowchart TD
    - Indicador de estado del modo resiliente (MySQL vs. In-Memory Fallback).
    - Botón de reinicio rápido de datos (`POST /api/reset`) para restaurar el catálogo maestro de 10 productos en ambientes de prueba o demostración.
 
+5. **🔌 iDempiere ERP (Integración REST API v1 & Control de Acceso):**
+   - **Blindaje Técnico Estricto:** Cumple con POST /api/v1/auth/tokens (plural), cabeceras Content-Type: application/json y Accept: application/json.
+   - **Estructura Wire Canónica:** Parámetros anidados en parameters con organizationId estricto (evita excepción Java LoginCredential).
+   - **Gestión de Sesión:** Token Bearer persistido en sesión, decodificación de contexto, y soporte de refresco (PUT) y revocación (DELETE).
+   - **Resiliencia & Sandbox:** Permite alternar entre enlace directo al ERP y sandbox simulado para operación continua.
+
 ---
 
 ### 4. ⚡ Servidor Backend y API REST (`server`)

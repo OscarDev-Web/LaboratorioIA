@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginScreen from './components/LoginScreen';
+import ErpIntegrationTab from './components/ErpIntegrationTab';
 
 // Default initial burgers in case server is not running or offline
 const INITIAL_ADMIN_BURGERS = [
@@ -269,8 +272,9 @@ const INITIAL_ADMIN_CUSTOMERS = [
   }
 ];
 
-export default function App() {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'burgers' | 'customers' | 'database'
+function AdminDashboard() {
+  const { isAuthenticated, user, parameters, isSimulated, logout } = useAuth();
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'burgers' | 'customers' | 'database' | 'erp'
   const [burgers, setBurgers] = useState(INITIAL_ADMIN_BURGERS);
   const [customers, setCustomers] = useState(INITIAL_ADMIN_CUSTOMERS);
   const [serverHealth, setServerHealth] = useState(null);
@@ -455,6 +459,10 @@ export default function App() {
     return true;
   });
 
+  if (!isAuthenticated) {
+    return <LoginScreen />;
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: '#F8FAFC', color: '#0F172A', display: 'flex', flexDirection: 'column' }}>
       
@@ -582,6 +590,47 @@ export default function App() {
             >
               🔄 {isLoading ? 'Cargando...' : 'Actualizar'}
             </button>
+
+            {/* ERP Operator Badge */}
+            <div style={{
+              background: isSimulated ? '#FEF3C7' : '#ECFDF5',
+              border: '1px solid',
+              borderColor: isSimulated ? '#FDE68A' : '#A7F3D0',
+              color: isSimulated ? '#92400E' : '#065F46',
+              padding: '6px 12px',
+              borderRadius: '9999px',
+              fontSize: '0.75rem',
+              fontWeight: '700',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span>{isSimulated ? '🛡️' : '🟢'}</span>
+              <span>{user?.userName || 'admin @ gardenworld.com'}</span>
+              <span style={{ opacity: 0.5 }}>|</span>
+              <span>Org: {parameters?.organizationId ?? 11}</span>
+            </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={logout}
+              title="Cerrar sesión y revocar token en iDempiere (DELETE /api/v1/auth/tokens)"
+              style={{
+                background: '#FFFFFF',
+                border: '1px solid #CBD5E1',
+                color: '#991B1B',
+                padding: '8px 12px',
+                borderRadius: '8px',
+                fontSize: '0.82rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              🚪 Salir
+            </button>
           </div>
         </div>
       </header>
@@ -616,7 +665,8 @@ export default function App() {
             { id: 'overview', label: '📊 Vista General', badge: null },
             { id: 'burgers', label: '🍔 Catálogo de Hamburguesas', badge: burgers.length },
             { id: 'customers', label: '👥 Consumidores & Clientes', badge: customers.length },
-            { id: 'database', label: '🗄️ Estado de la Base de Datos', badge: serverHealth?.database?.connected ? 'MySQL' : 'Memory' }
+            { id: 'database', label: '🗄️ Estado de la Base de Datos', badge: serverHealth?.database?.connected ? 'MySQL' : 'Memory' },
+            { id: 'erp', label: '🔌 Integración iDempiere ERP', badge: isSimulated ? 'Sandbox' : 'REST v1' }
           ].map(tab => (
             <button
               key={tab.id}
@@ -1394,6 +1444,13 @@ export default function App() {
           </div>
         )}
 
+        {/* ==================== TAB 5: iDempiere ERP INTEGRATION ==================== */}
+        {activeTab === 'erp' && (
+          <div className="fade-in">
+            <ErpIntegrationTab />
+          </div>
+        )}
+
       </div>
 
       {/* ==================== ADD BURGER MODAL ==================== */}
@@ -1570,5 +1627,13 @@ export default function App() {
         Hamburger Rapid &bull; Operations Suite &bull; Astro + React + Node.js API + MySQL &bull; Dokploy CI/CD Ready
       </footer>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AdminDashboard />
+    </AuthProvider>
   );
 }
